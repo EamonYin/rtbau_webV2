@@ -36,6 +36,11 @@
     >
     </el-alert>
   </div>
+
+<div>
+  <img :src="imageUrl" alt="">
+</div>
+
 </template>
 
 <script>
@@ -49,11 +54,12 @@
       mytianqi:"",
       list: [],
       input: "",
+      imageUrl: "",
       success: false,
       error: false,
     };
   },
-
+    // 页面一进入就加载
     mounted: function () {
      this.axios
       .get("/weather/get").then((res) => {
@@ -64,13 +70,18 @@
             this.error="有雨雪"
           }
       });
- 
+      // 发送API请求，并将返回的图片URL存储到imageUrl属性中
+      this.axios.get('/rtbau-user/getUserQR')
+        .then((response) => {
+          console.log("【后端返回的QR为：】" + response.data);
+          this.imageUrl = response.data
+        });
  },
   methods: {
     goSubmitBtn() {
       console.log("这里是goSubmitBtn：" + this.$route.query.uid);
       const param = { uid: this.$route.query.uid };
-      this.$axios
+      this.axios
         .post("/weather/get", {
           uid: this.$route.query.uid,
           nickName: this.input,
@@ -86,23 +97,19 @@
         });
     },
   },
-  components: {},
-  created() {
-    this.axios
-      .get("/weather/get")
-      .then((res) => {
-        this.list = res.data;
-        // for (var i = 0; i < res.data.length; i++) {
-        //   this.list.push(res.data[i].regionName);
-        // }
-      });
-    let uid = this.$route.query.uid;
-    this.myuid = uid;
-
-
-        
-
-  },
+  // components: {},
+  // created() {
+  //   this.axios
+  //     .get("/weather/get")
+  //     .then((res) => {
+  //       this.list = res.data;
+  //       // for (var i = 0; i < res.data.length; i++) {
+  //       //   this.list.push(res.data[i].regionName);
+  //       // }
+  //     });
+  //   let uid = this.$route.query.uid;
+  //   this.myuid = uid;
+  // },
 };
 </script>
 
