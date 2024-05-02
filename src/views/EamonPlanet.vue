@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="loaded">
     <h1>欢迎进入EamonPlanet！</h1>
 
     <br />
@@ -7,7 +7,7 @@
     <br />
     <span>您的uid为：{{ myuid }}</span>
     <br />
-    <span>明天天气：{{ mytianqi }}</span>
+    <span>明天天气：{{ tomorrowWeather }}</span>
     <br />
     <!-- 提交表单 -->
     <el-input type="text" name="nickName" v-model="input" ref="nickName" />
@@ -35,11 +35,9 @@
       show-icon
     >
     </el-alert>
-  </div>
 
-<div>
-  <img :src="imageUrl" alt="">
-</div>
+    <el-image :src="imageUrl" alt=""></el-image>
+  </div>
 
 </template>
 
@@ -51,10 +49,12 @@
     return {
       mybox: "",
       myuid: "",
-      mytianqi:"",
+      tomorrowWeather:"",
       list: [],
       input: "",
       imageUrl: "",
+      loaded: false,
+      data: null,
       success: false,
       error: false,
     };
@@ -64,10 +64,10 @@
      this.axios
       .get("/weather/get").then((res) => {
         console.log("【后端返回的结果为：】" + res.data);
-        if(res.data='false'){
-            this.mytianqi = "无雨雪";
+        if(res.data){
+            this.tomorrowWeather="有雨雪🥶,记得带🌂哦～"
           }else{
-            this.error="有雨雪"
+            this.tomorrowWeather = "无雨雪";
           }
       });
       // 发送API请求，并将返回的图片URL存储到imageUrl属性中
@@ -75,8 +75,17 @@
         .then((response) => {
           console.log("【后端返回的QR为：】" + response.data);
           this.imageUrl = response.data
+          this.loaded = true;
         });
+
+// setTimeout(() => {
+//       this.loaded = true;
+//     }, 2000); // 等待3秒后渲染页面
+
  },
+
+
+
   methods: {
     goSubmitBtn() {
       console.log("这里是goSubmitBtn：" + this.$route.query.uid);
