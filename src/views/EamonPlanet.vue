@@ -73,9 +73,9 @@ export default {
       this.axios
         .post("/rtbau-user/getUserQR", {
           cityCode: this.myLocationCode,
+          cityName:this.myLocation,
         })
         .then((response) => {
-          console.log("【前端传参：】" + this.myLocationCode);
           console.log("【后端返回的QR为：】" + response.data);
           this.imageUrl = response.data.qrUrl;
           this.imageCode = response.data.qrCode;
