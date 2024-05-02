@@ -1,13 +1,14 @@
 <template>
-<div v-if="loaded">
+  <div v-if="loaded">
     <h1>欢迎进入EamonPlanet！</h1>
 
     <br />
-    <span>您选择地区的编码为：{{ mybox }}</span>
+    <span>您当前所处：{{ myLocation }}</span>
+    <span>{{ myLocationCode }}</span>
     <br />
     <span>您的uid为：{{ myuid }}</span>
     <br />
-    <span>明天天气：{{ tomorrowWeather }}</span>
+    <span>明天：{{ tomorrowWeather }}</span>
     <br />
     <!-- 提交表单 -->
     <el-input type="text" name="nickName" v-model="input" ref="nickName" />
@@ -37,54 +38,62 @@
     </el-alert>
 
     <el-image :src="imageUrl" alt=""></el-image>
+    <el-tabs>{{ imageCode }}</el-tabs>
   </div>
-
 </template>
 
 <script>
-
-  export default {
+export default {
   name: "Home",
   data() {
     return {
-      mybox: "",
+      myLocation: "",
+      myLocationCode: "",
       myuid: "",
-      tomorrowWeather:"",
+      tomorrowWeather: "",
       list: [],
       input: "",
       imageUrl: "",
       loaded: false,
       data: null,
+      imageCode: "",
       success: false,
       error: false,
     };
   },
-    // 页面一进入就加载
-    mounted: function () {
-     this.axios
-      .get("/weather/get").then((res) => {
-        console.log("【后端返回的结果为：】" + res.data);
-        if(res.data){
-            this.tomorrowWeather="有雨雪🥶,记得带🌂哦～"
-          }else{
-            this.tomorrowWeather = "无雨雪";
-          }
-      });
-      // 发送API请求，并将返回的图片URL存储到imageUrl属性中
-      this.axios.get('/rtbau-user/getUserQR')
+
+  // 页面一进入就加载
+  mounted: function () {
+    // 1:获取ip信息
+    this.axios.get("/rtbau-user/getIPLocation").then((response) => {
+      console.log("【后端返回的地址为：】" + response.data);
+      this.myLocation = response.data.locationName;
+      this.myLocationCode = response.data.locationCode;
+      // 2:发送API请求，并将返回的图片URL存储到imageUrl属性中
+      this.axios
+        .post("/rtbau-user/getUserQR", {
+          cityCode: this.myLocationCode,
+        })
         .then((response) => {
+          console.log("【前端传参：】" + this.myLocationCode);
           console.log("【后端返回的QR为：】" + response.data);
-          this.imageUrl = response.data
+          this.imageUrl = response.data.qrUrl;
+          this.imageCode = response.data.qrCode;
           this.loaded = true;
         });
-
-// setTimeout(() => {
-//       this.loaded = true;
-//     }, 2000); // 等待3秒后渲染页面
-
- },
-
-
+    });
+    this.axios.get("/weather/get").then((res) => {
+      console.log("【后端返回的结果为：】" + res.data);
+      if (res.data) {
+        this.tomorrowWeather = "有雨雪🥶,记得带🌂哦～";
+      } else {
+        this.tomorrowWeather = "无雨雪😄，无需带🌂";
+      }
+    });
+    // setTimeout(() => {
+    //       this.loaded = true;
+    //     }, 2000); // 等待3秒后渲染页面
+  },
 
   methods: {
     goSubmitBtn() {
@@ -96,12 +105,12 @@
           nickName: this.input,
           regionCode: this.mybox,
         })
-        .then( (res) => {
+        .then((res) => {
           console.log("【后端返回的结果是】" + res.data);
-          if(res.data){
-            this.success=true
-          }else{
-            this.error=true
+          if (res.data) {
+            this.success = true;
+          } else {
+            this.error = true;
           }
         });
     },
