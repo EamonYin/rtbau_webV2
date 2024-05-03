@@ -1,4 +1,5 @@
 <template>
+<span style=display:none>{{ isExistflg }}</span>
   <div v-if="loaded">
     <h1>欢迎进入EamonPlanet！</h1>
 
@@ -37,12 +38,15 @@
     >
     </el-alert>
 
-    <el-image :src="imageUrl" alt=""></el-image>
+    <el-image :src="imageUrl" alt="" v-show="imageFlag"></el-image>
     <el-tabs>{{ imageCode }}</el-tabs>
+    <el-tabs>{{ isExist }}</el-tabs>
   </div>
 </template>
 
 <script>
+import { watch, onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
 export default {
   name: "Home",
   data() {
@@ -54,33 +58,76 @@ export default {
       list: [],
       input: "",
       imageUrl: "",
+      imageFlag: false,
       loaded: false,
       data: null,
       imageCode: "",
+      isExist: "",
+      isExistflg:"",
       success: false,
       error: false,
     };
   },
+  created: function(){
+    const route = useRouter();
+    watch(route.currentRoute, () => {
+      console.log("接收到的username：" + this.$route.query.uid);
+      this.isExistflg = this.$route.query.uid;
+    });
+  },
 
-  // 页面一进入就加载
+  //页面一进入就加载
   mounted: function () {
     // 1:获取ip信息
     this.axios.get("/rtbau-user/getIPLocation").then((response) => {
       console.log("【后端返回的地址为：】" + response.data);
       this.myLocation = response.data.locationName;
       this.myLocationCode = response.data.locationCode;
-      // 2:发送API请求，并将返回的图片URL存储到imageUrl属性中
-      this.axios
-        .post("/rtbau-user/getUserQR", {
-          cityCode: this.myLocationCode,
-          cityName:this.myLocation,
-        })
-        .then((response) => {
-          console.log("【后端返回的QR为：】" + response.data);
-          this.imageUrl = response.data.qrUrl;
-          this.imageCode = response.data.qrCode;
-          this.loaded = true;
-        });
+      if (this.isExistflg) {
+        this.myuid = this.isExistflg;
+        // 判断用户是否存在且开启
+        this.axios
+          .post("/rtbau-user/userIsExist", {
+            uid: this.isExistflg,
+          })
+          .then((response) => {
+            console.log(
+              "【后端返回判断用户是否存在且开启结果：】" + response.data
+            );
+            if (response.data) {
+              this.isExist = "您已注册，无需扫码！";
+              this.loaded = true;
+            } else {
+              // 2:发送API请求，并将返回的图片URL存储到imageUrl属性中
+              this.axios
+                .post("/rtbau-user/getUserQR", {
+                  cityCode: this.myLocationCode,
+                  cityName: this.myLocation,
+                })
+                .then((response) => {
+                  console.log("【后端返回的QR为Url：】" + response.data.qrUrl);
+                  this.imageUrl = response.data.qrUrl;
+                  this.imageCode = response.data.qrCode;
+                  this.imageFlag = true;
+                  this.loaded = true;
+                });
+            }
+          });
+      } else {
+        // 2:发送API请求，并将返回的图片URL存储到imageUrl属性中
+        this.axios
+          .post("/rtbau-user/getUserQR", {
+            cityCode: this.myLocationCode,
+            cityName: this.myLocation,
+          })
+          .then((response) => {
+            console.log("【后端返回的QR为Url：】" + response.data.qrUrl);
+            this.imageUrl = response.data.qrUrl;
+            this.imageCode = response.data.qrCode;
+            this.imageFlag = true;
+            this.loaded = true;
+          });
+      }
     });
     this.axios.get("/weather/get").then((res) => {
       console.log("【后端返回的结果为：】" + res.data);
@@ -130,5 +177,3 @@ export default {
   // },
 };
 </script>
-
-
