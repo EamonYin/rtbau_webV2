@@ -1,18 +1,20 @@
 <template>
 <span style=display:none>{{ isExistflg }}</span>
-  <div v-if="loaded">
+  <div v-loading.fullscreen.lock="fullscreenLoading">
+    <!-- 改为组件等待加载动画 -->
+    <!-- <div v-if="loaded"> -->
     <h1>欢迎进入EamonPlanet！</h1>
 
     <br />
     <span>您当前所处：{{ myLocation }}</span>
-    <span>{{ myLocationCode }}</span>
+    <span v-show=false>{{ myLocationCode }}</span>
     <br />
     <span>您的uid为：{{ myuid }}</span>
     <br />
     <span>明天：{{ tomorrowWeather }}</span>
     <br />
     <!-- 提交表单 -->
-    <el-input type="text" name="nickName" v-model="input" ref="nickName" />
+    <!-- <el-input type="text" name="nickName" v-model="input" ref="nickName" />
     <el-input
       type="submit"
       name="goSubmitBtn"
@@ -36,7 +38,7 @@
       description="注册有误！"
       show-icon
     >
-    </el-alert>
+    </el-alert> -->
 
     <el-image :src="imageUrl" alt="" v-show="imageFlag"></el-image>
     <el-tabs>{{ imageCode }}</el-tabs>
@@ -64,6 +66,7 @@ export default {
       imageCode: "",
       isExist: "",
       isExistflg:"",
+      fullscreenLoading: true,
       success: false,
       error: false,
     };
@@ -97,6 +100,7 @@ export default {
             if (response.data) {
               this.isExist = "您已注册，无需扫码！";
               this.loaded = true;
+              this.fullscreenLoading = false;
             } else {
               // 2:发送API请求，并将返回的图片URL存储到imageUrl属性中
               this.axios
@@ -110,6 +114,7 @@ export default {
                   this.imageCode = response.data.qrCode;
                   this.imageFlag = true;
                   this.loaded = true;
+                  this.fullscreenLoading = false;
                 });
             }
           });
@@ -126,6 +131,7 @@ export default {
             this.imageCode = response.data.qrCode;
             this.imageFlag = true;
             this.loaded = true;
+            this.fullscreenLoading = false;
           });
       }
     });
