@@ -1,10 +1,12 @@
 <template>
-<span style=display:none>{{ isExistflg }}</span>
+  <span style="display: none">{{ isExistflg }}</span>
   <div v-loading.fullscreen.lock="fullscreenLoading">
     <!-- 改为组件等待加载动画 -->
     <!-- <div v-if="loaded"> -->
-    <h1>欢迎进入EamonPlanet！</h1>
-
+    <el-row type="flex" justify="center" align="middle">
+      <h1>欢迎进入EamonPlanet！</h1>
+    </el-row>
+    <!-- 
     <br />
     <span>您当前所处：{{ myLocation }}</span>
     <span v-show=false>{{ myLocationCode }}</span>
@@ -12,7 +14,21 @@
     <span>您的uid为：{{ myuid }}</span>
     <br />
     <span>明天：{{ tomorrowWeather }}</span>
-    <br />
+    <br /> -->
+    <el-row type="flex" justify="center" align="middle">
+      <el-form label-position="right" label-width="auto">
+        <el-form-item label="您当前所处：">
+          {{ myLocation }} 
+        </el-form-item>
+        <el-form-item label="您的uid为：" v-if="isExistflg">
+          {{ myuid }}
+          </el-form-item>
+        <el-form-item label="明天："> 
+          {{ tomorrowWeather }}
+          </el-form-item>
+      </el-form>
+    </el-row>
+
     <!-- 提交表单 -->
     <!-- <el-input type="text" name="nickName" v-model="input" ref="nickName" />
     <el-input
@@ -39,10 +55,13 @@
       show-icon
     >
     </el-alert> -->
-
-    <el-image :src="imageUrl" alt="" v-show="imageFlag"></el-image>
-    <el-tabs>{{ imageCode }}</el-tabs>
-    <el-tabs>{{ isExist }}</el-tabs>
+    <el-row type="flex" justify="center" align="middle">
+      <el-image :src="imageUrl" alt="" v-show="imageFlag"></el-image>
+    </el-row>
+    <el-row type="flex" justify="center" align="middle">
+      <el-tabs>{{ imageCode }}</el-tabs>
+      <el-tabs>{{ isExist }}</el-tabs>
+    </el-row>
   </div>
 </template>
 
@@ -56,6 +75,7 @@ export default {
       myLocation: "",
       myLocationCode: "",
       myuid: "",
+      myuidIsShow: false,
       tomorrowWeather: "",
       list: [],
       input: "",
@@ -65,13 +85,13 @@ export default {
       data: null,
       imageCode: "",
       isExist: "",
-      isExistflg:"",
+      isExistflg: "",
       fullscreenLoading: true,
       success: false,
       error: false,
     };
   },
-  created: function(){
+  created: function () {
     const route = useRouter();
     watch(route.currentRoute, () => {
       console.log("接收到的username：" + this.$route.query.uid);
