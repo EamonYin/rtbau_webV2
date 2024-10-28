@@ -7,7 +7,7 @@ import store from './store'
 import less from 'less'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-axios.defaults.baseURL = 'http://124.221.68.138:5539/practice'
+axios.defaults.baseURL = 'https://hello.xiaomign100.club/api/' //通过nginx反向代理转将https为http请求
 // axios.defaults.baseURL = 'http://localhost:8090/practice'
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*'

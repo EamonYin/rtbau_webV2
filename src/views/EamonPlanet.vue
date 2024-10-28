@@ -27,6 +27,8 @@
           {{ tomorrowWeather }}
           </el-form-item>
       </el-form>
+
+      <span>{{ userId }}</span>
     </el-row>
 
     <!-- 提交表单 -->
@@ -86,6 +88,7 @@ export default {
       imageCode: "",
       isExist: "",
       isExistflg: "",
+      userId:"",
       fullscreenLoading: true,
       success: false,
       error: false,
