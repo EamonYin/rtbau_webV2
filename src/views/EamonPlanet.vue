@@ -58,6 +58,8 @@
     >
     </el-alert> -->
     <el-row type="flex" justify="center" align="middle">
+      <el-tabs>请使用微信“扫一扫”扫描下方二维码,以获取坏天气信息推送</el-tabs>
+      <el-tabs>产品使用开源<a href="https://wxpusher.zjiecode.com/" target="_blank" class="buttonText">wxpusher</a>实现推送，请放心扫码</el-tabs>
       <el-image :src="imageUrl" alt="" v-show="imageFlag"></el-image>
     </el-row>
     <el-row type="flex" justify="center" align="middle">
