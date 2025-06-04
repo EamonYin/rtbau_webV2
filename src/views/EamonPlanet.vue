@@ -1,73 +1,84 @@
 <template>
-  <span style="display: none">{{ isExistflg }}</span>
-  <div v-loading.fullscreen.lock="fullscreenLoading">
+  <el-container v-loading.fullscreen.lock="fullscreenLoading">
+    <span style="display: none">{{ isExistflg }}</span>
     <!-- 改为组件等待加载动画 -->
-    <!-- <div v-if="loaded"> -->
-    <el-row type="flex" justify="center" align="middle">
+    <el-header>
+      <a
+        >CSDN博客专家
+        <img alt="Vue logo" src="../assets/good.png" width="20" height="20" />
+        <img alt="Vue logo" src="../assets/expert.png" width="20" height="20" />
+        ：
+        <a
+          href="https://blog.csdn.net/Tianc666?type=blog"
+          target="_blank"
+          class="buttonText"
+          >进阶的小名</a
+        >
+      </a>
       <h1>欢迎进入EamonPlanet！</h1>
-    </el-row>
-    <!-- 
-    <br />
-    <span>您当前所处：{{ myLocation }}</span>
-    <span v-show=false>{{ myLocationCode }}</span>
-    <br />
-    <span>您的uid为：{{ myuid }}</span>
-    <br />
-    <span>明天：{{ tomorrowWeather }}</span>
-    <br /> -->
-    <el-row type="flex" justify="center" align="middle">
-      <el-form label-position="right" label-width="auto">
+    </el-header>
+    <el-main style="padding-top: 30px">
+      <table align="center">
+        <tr>
+          <td>
+            <el-row justify="start">
+              <a><b>您当前所处：</b>{{ myLocation }}</a>
+            </el-row>
+            <el-row justify="start">
+              <a><b>明天的天气：</b>{{ tomorrowWeather }}</a>
+            </el-row>
+          </td>
+        </tr>
+      </table>
+
+      <el-row type="flex" justify="center" align="middle">
+        <!-- <el-form label-position="right" label-width="auto"> -->
+        <!-- 
         <el-form-item label="您当前所处：">
-          {{ myLocation }} 
+          {{ myLocation }}
         </el-form-item>
         <el-form-item label="您的uid为：" v-if="isExistflg">
           {{ myuid }}
-          </el-form-item>
-        <el-form-item label="明天："> 
+        </el-form-item>
+        <el-form-item label="明天的天气：">
           {{ tomorrowWeather }}
-          </el-form-item>
-      </el-form>
+        </el-form-item>
+      </el-form> -->
 
-      <span>{{ userId }}</span>
-    </el-row>
+        <span>{{ userId }}</span>
 
-    <!-- 提交表单 -->
-    <!-- <el-input type="text" name="nickName" v-model="input" ref="nickName" />
-    <el-input
-      type="submit"
-      name="goSubmitBtn"
-      value="提交"
-      @click.native="goSubmitBtn"
-    />
-
-    <el-alert
-      title="成功提示"
-      type="success"
-      v-show="success"
-      description="注册成功！若未来的某一天是恶劣天气，您将提前一天收到小名的推送，提醒您带伞"
-      show-icon
-    >
-    </el-alert>
-
-    <el-alert
-      title="错误提示"
-      type="error"
-      v-show="error"
-      description="注册有误！"
-      show-icon
-    >
-    </el-alert> -->
-    <el-row type="flex" justify="center" align="middle">
-      <el-tabs>请使用微信“扫一扫”扫描下方二维码,以获取坏天气信息推送</el-tabs>
-      <el-tabs>产品使用开源<a href="https://wxpusher.zjiecode.com/" target="_blank" class="buttonText">wxpusher</a>实现推送，请放心扫码</el-tabs>
-      <el-image :src="imageUrl" alt="" v-show="imageFlag"></el-image>
-    </el-row>
-    <el-row type="flex" justify="center" align="middle">
-      <el-tabs>{{ imageCode }}</el-tabs>
-      <el-tabs>{{ isExist }}</el-tabs>
-    </el-row>
-  </div>
+        <el-col>
+          <el-tabs
+            >请使用微信“扫一扫”扫描下方二维码,以获取坏天气信息推送</el-tabs
+          >
+        </el-col>
+        <el-col>
+          <el-tabs>
+            产品使用开源的<a
+              href="https://wxpusher.zjiecode.com/"
+              target="_blank"
+              class="buttonText"
+              >WxPusher</a
+            >实现推送，请放心扫码
+          </el-tabs>
+        </el-col>
+        <el-col>
+          <el-image :src="imageUrl" alt="" v-show="imageFlag" style="transform: scale(0.8);"></el-image>
+          <!-- <el-row type="flex" justify="center" align="middle"> -->
+        </el-col>
+        <el-col>
+          <el-tabs>{{ imageCode }}</el-tabs>
+        </el-col>
+        <el-col>
+          <el-tabs>{{ isExist }}</el-tabs>
+        </el-col>
+        <!-- </el-row> -->
+      </el-row>
+    </el-main>
+    <!-- </div> -->
+  </el-container>
 </template>
+
 
 <script>
 import { watch, onBeforeMount } from "vue";
@@ -84,13 +95,14 @@ export default {
       list: [],
       input: "",
       imageUrl: "",
+      blog: "",
       imageFlag: false,
       loaded: false,
       data: null,
       imageCode: "",
       isExist: "",
       isExistflg: "",
-      userId:"",
+      userId: "",
       fullscreenLoading: true,
       success: false,
       error: false,
@@ -207,4 +219,66 @@ export default {
   //   this.myuid = uid;
   // },
 };
+
+
+let colors = [
+  "#FFFF00",
+  "#FFD700",
+  "#FFA500",
+  "#32CD32",
+  "#00FF00",
+  "#98FB98",
+  "#FF4500",
+  "#DC143C",
+  "#00FFFF",
+  "#40E0D0",
+  "#1E90FF",
+  "#EE82EE",
+  "#DA70D6",
+  "#9370DB",
+];
+let currentColorIndex = 0;
+document.documentElement.style.setProperty(
+  "--text-color",
+  colors[currentColorIndex]
+);
+setInterval(() => {
+  currentColorIndex = (currentColorIndex + 1) % colors.length;
+  document.documentElement.style.setProperty(
+    "--text-color",
+    colors[currentColorIndex]
+  );
+}, 800);
 </script>
+
+<style>
+/* 定义放大缩小动画关键帧 */
+@keyframes scale-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+body {
+     height: 100vh;
+ }
+
+.grid-container {
+     display: grid;
+     place-items: center;
+ }
+
+h1 {
+  font-size: 25px;
+  -webkit-animation: scale-animation 2s infinite;
+  animation: scale-animation 2s infinite;
+  transition: color 0.5s ease; /* 添加颜色过渡效果 */
+  color: var(--text-color);
+}
+</style>
