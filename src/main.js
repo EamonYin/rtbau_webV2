@@ -14,6 +14,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*'
 
 
+
 const app = createApp(App);
 app.use(store).use(router).use(ElementPlus).use(less).use(VueAxios,axios).mount('#app')
 app.config.globalProperties.$axios = axios;
