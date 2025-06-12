@@ -2,6 +2,7 @@
   <el-container v-loading.fullscreen.lock="fullscreenLoading">
     <span style="display: none">{{ isExistflg }}</span>
     <!-- 改为组件等待加载动画 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <el-header>
       <a
         >CSDN博客专家
@@ -15,9 +16,18 @@
           >进阶的小名</a
         >
       </a>
-      <h1>欢迎进入EamonPlanet！</h1>
     </el-header>
-    <el-main style="padding-top: 30px">
+    
+    <!-- 独立的标题布局 -->
+    <el-row type="flex" justify="center" align="middle" class="title-row">
+      <el-col :span="24">
+        <div class="title-container">
+          <h1>欢迎进入EamonPlanet！</h1>
+        </div>
+      </el-col>
+    </el-row>
+    
+    <el-main>
       <table align="center">
         <tr>
           <td>
@@ -49,7 +59,7 @@
 
         <el-col>
           <el-tabs
-            >请使用微信“扫一扫”扫描下方二维码,以获取坏天气信息推送</el-tabs
+            >请使用微信"扫一扫"扫描下方二维码,以获取坏天气信息推送</el-tabs
           >
         </el-col>
         <el-col>
@@ -79,6 +89,10 @@
   </el-container>
 </template>
 
+<!-- &lt;!&ndash; 微信的SDK &ndash;&gt; -->
+<!-- <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script> -->
+<!-- &lt;!&ndash; uni 的 SDK &ndash;&gt; -->
+<!-- <script type="text/javascript" src="https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.2.js"></script>-->
 
 <script>
 import { watch, onBeforeMount } from "vue";
@@ -274,11 +288,31 @@ body {
      place-items: center;
  }
 
+/* 标题相关样式 */
+.title-row {
+  margin: 0;
+  background-color: transparent;
+  border-radius: 8px;
+  padding: 0;
+}
+
+.title-container {
+  text-align: center;
+  transform: translateX(12px);
+  margin: 0;
+}
+
 h1 {
   font-size: 25px;
   -webkit-animation: scale-animation 2s infinite;
   animation: scale-animation 2s infinite;
   transition: color 0.5s ease; /* 添加颜色过渡效果 */
   color: var(--text-color);
+  max-width: 100%;
+  width: 100%;
+  font-size: clamp(25px, 8vw, 60px); /* 响应式字体大小 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin: 0;
 }
 </style>
