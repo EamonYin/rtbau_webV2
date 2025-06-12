@@ -89,18 +89,9 @@
   </el-container>
 </template>
 
-<!-- &lt;!&ndash; 微信的SDK &ndash;&gt; -->
-<!-- <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script> -->
-<!-- &lt;!&ndash; uni 的 SDK &ndash;&gt; -->
-<!-- <script type="text/javascript" src="https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.2.js"></script>-->
-
 <script>
 import { watch, onBeforeMount, onMounted } from "vue";
 import { useRouter } from "vue-router";
-
-// 声明外部变量，用于存储SDK实例
-const wx = window.wx;
-const uni = window.uni;
 
 export default {
   name: "Home",
@@ -125,9 +116,6 @@ export default {
       fullscreenLoading: true,
       success: false,
       error: false,
-      // 添加微信SDK相关的数据
-      wxReady: false,
-      uniReady: false,
     };
   },
   created: function () {
@@ -140,9 +128,7 @@ export default {
 
   //页面一进入就加载
   mounted: function () {
-    // 初始化微信SDK和uni SDK
-    this.initSDKs();
-    
+
     // 1:获取ip信息
     this.axios.get("/rtbau-user/getIPLocation").then((response) => {
       console.log("【后端返回的地址为：】" + response.data);
@@ -211,24 +197,6 @@ export default {
   },
 
   methods: {
-    // 初始化SDK的方法
-    initSDKs() {
-      // 检查微信SDK是否加载
-      if (typeof wx !== 'undefined') {
-        this.wxReady = true;
-        console.log('微信SDK加载成功');
-      } else {
-        console.error('微信SDK加载失败');
-      }
-
-      // 检查uni SDK是否加载
-      if (typeof uni !== 'undefined') {
-        this.uniReady = true;
-        console.log('uni SDK加载成功');
-      } else {
-        console.error('uni SDK加载失败');
-      }
-    },
     goSubmitBtn() {
       console.log("这里是goSubmitBtn：" + this.$route.query.uid);
       const param = { uid: this.$route.query.uid };
